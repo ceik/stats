@@ -1,0 +1,423 @@
+---
+title: "Notes Chapter 1 - Introduction to Data"
+output: pdf_document
+---
+
+```{r, echo=FALSE}
+setwd("C:/Chris/stats/oi_stats")
+#install.packages("openintro")
+library(ggplot2)
+library(openintro)
+library(scales)
+```
+
+Analyses are often a four step process:
+
+1. Identify a question or problem.
+2. Collect relevant data on the topic.
+3. Analyze the data.
+4. Form a conclusion.
+
+The subject of statistics tries to make steps 2-4 objective, rigorous, and
+efficient.
+
+# 1.1 Case Study
+
+*Summary Statistic*: A single number summarizing a large amount of data.
+
+
+# 1.2 Data Basics
+
+## 1.2.1 Observations, Variables, and Data Matrices
+
+A data matrix is a common way to display data. In it a row corresponds to a case
+(or unit of observation) and each column represents a variable. An example for 
+a data matrix with 21 variables and 50 cases is the email50 dataset as loaded 
+here:
+
+```{r}
+email50 <- read.table("data/email50.txt", header = TRUE, sep = "\t")
+head(email50)
+```
+
+
+## 1.2.2 Types of Variables
+
+Example data set county:
+
+```{r}
+county <- read.table("data/county.txt", header = T, sep = "\t")
+county_w_sb <- read.table("data/county_w_sm_ban.txt", header = T, sep = "\t")
+county_w_sb_slim <- county_w_sb[,c(1,2,4,5,51,33,26,27,31,32,54)]
+head(county_w_sb_slim)
+head(county)
+```
+
+Variables can be:
+
+* Numerical: Variable is a number and it makes sense to perform calculations 
+based on it. E.g. fed_spending or pop2010 in the county dataset. As a counter 
+example, zip-codes are not numerical variables because calculations with zip-
+codes do not make sense. Numerical variables can be split into:  
+    + Continuous: Variable can take values in a certain range. E.g. fed_spending.
+    + Discrete: Variable can take only values of certain steps. E.g. pop2010, a 
+    population of 25.34 does not make sense.
+* Categorical: Categorical variables take values which categorize observations. 
+E.g. the state or smoking_ban column in the country dataset. Categorical 
+variables can be:
+    + Ordinal: These variables have a (natural) ordering.
+    + Regular: These variables have no ordering.
+
+## 1.2.3 Relationship Between Variables
+
+```{r, echo=FALSE}
+g <- ggplot(county, aes(poverty/100, fed_spend))
+g <- g + geom_point(color = "black", size = 2, alpha = 1/2)
+g <- g + scale_x_continuous(name = "Percent of Units in Multi-Unit Structures",
+                            limit = c(0, 0.6), labels = percent)
+g <- g + scale_y_continuous(name = "Percent of Homeownership",
+                            limit = c(0, 35), labels = comma)
+
+
+g <- g + geom_segment(aes(x=county[county$name=="Owsley County",]$poverty/100,
+                          y=0, 
+                          xend = county[county$name=="Owsley County",]$poverty/100,
+                          yend=county[county$name=="Owsley County",]$fed_spend,
+                          color="red"),
+                      linetype = 2, show_guide = FALSE)
+g <- g + geom_segment(aes(x=0,
+                          y=county[county$name=="Owsley County",]$fed_spend,
+                          xend=county[county$name=="Owsley County",]$poverty/100,
+                          yend=county[county$name=="Owsley County",]$fed_spend,
+                          color="red"),
+                      linetype = 2, show_guide = FALSE)
+g <- g + geom_point(x = county[county$name=="Owsley County",]$poverty/100,
+                    y = county[county$name=="Owsley County",]$fed_spend,
+                    color = "red", size = 4, alpha = 0.75, shape = 1)
+g
+```
+
+Variables can be associated (also called dependent), which means they have some
+kind of relationship with each other, or independent. Furthermore the association
+(or dependency) can be positive (see plot above) or negative (see plot below).
+
+```{r, echo=FALSE}
+g <- ggplot(county, aes(multiunit/100, homeownership/100))
+g <- g + geom_point(color = "black", size = 2, alpha = 1/2)
+g <- g + scale_x_continuous(name = "Percent of Units in Multi-Unit Structures",
+                            limit = c(0, 1), labels = percent)
+g <- g + scale_y_continuous(name = "Percent of Homeownership",
+                            limit = c(0, 1), labels = percent)
+g
+```
+
+
+# 1.3 Overview of Data Collection Principles
+
+After identifying the problem upon which research is supposed to be conducted,
+it has to be considered how data are collected so that they are reliable and 
+useful for research.
+
+## 1.3.1 Populations and Samples
+
+Example research questions:
+
+1. What is the average mercury content in swordfish in the Atlantic Ocean?
+2. Over the last 5 years, what is the average time to complete a degree for 
+Duke undergraduate students?
+3. Does a new drug reduce the number of deaths in patients with severe heart
+disease?
+
+Research question often refer to a target population. These populations are in
+many cases so large that it is too expensive to collect data for every case.
+Instead a sample is taken, representing an (often small) subset of the 
+population.
+
+## 1.3.2 Anecdotal Evidence
+
+Anecdotal Evidence is evidence that is based on too few cases (often low single
+digit number) and which are often not representative of the population. We are
+more likely to remember unusual or personal cases, which is why these
+often cloud our judgement. Instead we should collect sufficient, representative 
+data and use it to answer a research question in a sound way.
+
+Example answers to the questions above based on anecdotal evidence:
+
+1. A man on the news got mercury poisoning from eating swordfish, so the average
+mercury concentration in swordfish must be dangerously high.
+2. I met two students who took more than 7 years to graduate from Duke, so it
+must take longer to graduate at Duke than at many other colleges.
+3. My friend's dad had a heart attack and died after they gave him a new heart 
+disease drug, so the drug must not work.
+
+## 1.3.3 Sampling from a Population
+
+Unless impossible, samples should always be choosen __randomly__ from a 
+population. When cases are selected manually, there is a chance of introducing
+__bias__ into the sample. A basic way of sampling randomly is called 
+__simple random sample__, which is similar to a raffle lottery. Here each case
+has the same chance of being included and there is no connection between the
+cases in the sample.
+
+Another type of bias is the __non-response bias__, which is very common in 
+surveys. It happens when a certain part of the population is more likely to
+respond to the survey. Especially when response rates are low, one must be
+cautious.
+
+A third common bias is the one of having a __convenience sample__. Here cases
+that are easily accessible are more likely to be included in the sample. This
+could happen when a survey is taken only is a small part of the area for which
+it is supposed to be.
+
+
+## 1.3.4 Explanatory and Response Variables
+
+An __explanatory variable__ is one that might affect the __response variable__.
+In datasets with many variables there are often many of these relationships. 
+Other terms are __independent variable__ and __dependent variable__ for the 
+explanatory (does not depend on the response variable) and the response variable
+respectively.
+
+E.g. in the county dataset one might say that the poverty rate is the
+explanatory variable for federal spending.
+
+Caution: Just because two variables are associated there is not necessarily a 
+__causal relationship__ between them. __Association does not imply causation.__
+
+Also even if there is association between two variables, the direction might not
+be clear. One example for this is the homeownership rate and the percentage of
+multi-unit structures in the county dataset.
+
+## 1.3.5 Introducing Observational Studies and Experiments
+
+Observational Studies and Experiments are the two primary types of data
+collection. 
+
+In __observational studies__ data is collected in a way that does not interfere
+with how the data arises. E.g. medical records or already existing company
+records. Generally observational studies can only provide evidence of a 
+naturally occuring association, while they can not show causal connection.
+
+In order to prove causality an __experiment__ needs to be conducted. Here
+explanatory and response variables are defined upfront. Afterwards the sample
+is split into groups. If this is done randomly we speak of a 
+__randomized experiment__. Each group is then assigned a different input for the
+explanatory variables. E.g. when researching a medical treatment, one group
+could get the treatment while the other group gets a placebo.
+
+
+# 1.4 Observational Studies and Sampling Strategies
+
+## 1.4.1 Observational Studies
+
+Data in observational studies are collected by monitoring what occurs. This 
+allows the researcher to show association, but it is dangerous, and therefore
+not recommended, to use them to infer causality. For this an experiment is
+usually required.
+
+__Confounding variables__, which are correlated to both the explanatory and the
+response variable, play a great role in observational studies. E.g. sunscreen 
+usage and skin cancer are associated variables, however one does not cause the
+other. A confounding variable in this case is sun exposure.
+
+Confounding variables are a reason why observational studies can not prove
+causality well. In order to do so one must exhaust the search for confounding 
+variables, which is very hard to do.
+
+Confounding variables are also called __lurking variables__, __confounder__, or
+__confounding factor__.
+
+Observational studies come in two forms:
+
+* __Prospective__: Individuals/cases are identified and data is collected as
+events unfold. E.g. observing a group of similar individuals over time to see
+if certain aspects of their behaviour influence cancer risk.
+* __Retrospective__: Data is collected after events have taken place. E.g.
+medical records.
+
+
+## 1.4.2 Three Sampling Methods
+
+__Simple random sampling__ is the most intuitive form of random sampling. All
+cases are randomly drawn from the total population. This is comparable to a 
+raffle lottery. In general simple random sampling is characterized by each case
+having the same probability of being included in the sample and by there being
+no relationship between the cases selected and not selected to be included in 
+the sample.
+
+In __stratified sampling__ the population is divided into groups of cases, 
+called _strata__, which are similar to each other with respect to the outcome of
+interest. Then from each stratum a number of cases are choosen by simple random 
+sampling. This technique is very useful if the cases within each stratum are
+very similar to each other. However the statistical methods described here need
+to be extended to be used on data collected using stratified sampling.
+
+In __cluster sampling__ the population is divided into groups of cases called
+__clusters__. Afterwards a fixed number of cases are sampled from some clusters
+via simple random sampling. It is not required to sample from all clusters.
+Cluster sampling is most helpful when there is a lot of case-by-case variability
+withing the clusters, but the clusters themselves are very similar to each other.
+It is often a more economical sampling method than the other two. However the 
+methods in this book need to be extended before the can be used on data 
+collected via cluster sampling.
+
+
+# 1.5 Experiments
+
+Studies in which researchers assign treatments to cases are called 
+__experiments__. When this assignment is done in a randomized way, the study is
+a __randomized experiment__, which are fundamentally important when trying to
+show a causal connection between variables.
+
+
+## 1.5.1 Principles of Experiment Design
+
+__Controlling__: After assigning treatments to cases, the researcher must do
+his best to control any other factors that might influence the outcome of the
+observed variable. It is essential to track all these other factors in variables.
+
+__Randomization__: By assigning cases to the treatment and control group in a 
+randomized way, the researcher not only avoids bias, he also accounts for 
+variables that can not be controlled by making sure they affect both groups 
+equally.
+
+__Replication__: The more cases are included in a study, the more accurately the
+effect between explanatory and response variable can be estimated. In addition
+to replicating cases within a study (by simply having many of them), a whole
+study can be replicated by another researcher to varify findings.
+
+__Blocking__: When the researcher suspects that uncontrollable variables affect
+the outcome of the study, he may first group cases into __blocks__. Afterwards
+he randomizes for each block seperately. The methods in this book need to first
+be extended to analyze data from experiments that use blocking.
+
+
+## 1.5.2 Reducing Bias in Human Experiments
+
+While the researcher must always do his best to aviod bias in a study it often
+arises unintentionally. This is especially common in studies involving humans in
+any way. One way to avoid unintentional bias is to design a __blind__ study, in
+which the patient is unaware about which treatment he receives. To aid this a 
+__placebo__ can be used. In some cases slight but real improvements happen for
+cases that receive the placebo (e.g. because of emotional effects). This is 
+called the __placebo effect__. Because bias can also be introduced by the 
+person administrating the study he should also be unaware of which case belongs
+to which group. These studies are then __double-blind__.
+
+# 1.6 Examining Numerical Data
+
+## 1.6.1 Scatterplots for Paired Data
+
+```{r, echo=FALSE}
+email50 <- read.table("data/email50.txt", sep = "\t", header = TRUE)
+
+g <- ggplot(data = email50)
+g <- g + geom_point(aes(x = num_char, y = line_breaks), alpha = 1/2, 
+                    color = "steelblue", size = 4)
+g <- g + scale_x_continuous(name = "Number of Characters (in thousands)")
+g <- g + scale_y_continuous(name = "Number of Lines")
+g
+```
+
+This __scatterplot__ visualizes the relationship between two variables from the
+email50 dataset. Scatterplots are helpful when illustrating association between
+variables. However they can not show causality. Also they might miss 
+relationships. E.g. in the email50 dataset, many of the more verbose mails are
+HTML, which increases the number of characters without increasing the amount of
+content.
+
+Scatterplots can be enhanced in many ways. E.g. the plots below adds three more
+variables, by varying color, size, and facet by the spam, exclaim_mess, and 
+format variables.
+
+```{r, echo=FALSE}
+email50$spam <- as.factor(email50$spam)
+p <- ggplot(data = email50)
+p <- p + geom_point(aes(x = num_char, y = line_breaks, color = spam, 
+                    size = exclaim_mess))
+p <- p + scale_color_manual(values = c("green", "red"))
+p <- p + scale_x_continuous(name = "Number of Characters (in thousands)")
+p <- p + scale_y_continuous(name = "Number of Lines")
+p <- p + facet_grid(. ~ format)
+p
+```
+
+
+## 1.6.2 Dot Plots and the Mean
+
+```{r, echo=FALSE}
+g <- ggplot(data = email50)
+g <- g + geom_dotplot(aes(x = num_char))
+#g <- g + scale_y_continuous(name = "", breaks = NULL)
+g <- g + geom_segment(aes(x = mean(num_char), xend = mean(num_char), y = 0,
+                      yend = 0.25, color = "red"), show_guide = F)
+g
+```
+
+A __dot plot__ is essentially a one variable scatterplot. It is useful to show
+the __mean__ (average) of the data. The mean of the sample data is called
+__sample mean__, usually denoted by $\bar{x}$ (x_bar), and computed as follows:
+
+$$\bar{x} = \frac{\sum (x_1 + x_2 + ... + x_n)}{n}$$
+
+Here $\mathbf{n}$ is the number of observations (exlcuding NAs) and 
+$\mathbf{x_i}$ are the values observed for each variable. The equivalent 
+calculation in R:
+
+```{r}
+sum(email50$num_char) / length(email50$num_char)
+mean(email50$num_char)
+```
+
+The mean of the populations, the __population mean__ is represented by the greek
+letter mu: $\mathbf{\mu}$. A subscript can be added to show which variable it
+refers to: $\mathbf{\mu_x}$.
+
+It is often important to calculate the __weighted mean__, especially when using
+data that is already aggregated. Instead of dividing by the number of 
+observations the weighted mean divides by the sum of the weights $w_i$ that each
+variable has:
+
+$$\bar{x} = \frac{\sum (x_1 * w_1 + x_2 * w_2 + ... + x_n * w_n)}
+    {\sum (w_1 + w_2 + ... + w_n)}$$
+
+E.g. for the county dataset one could compute the mean income per county as the
+normal mean. However for the average income per person in the US, a weighted
+mean needs to be used.
+
+```{r}
+county <- read.table("data/county.txt", header = T, sep = "\t")
+mean(county$income)
+weighted.mean(county$income, county$pop2010)
+sum(as.double(county$income) * as.double(county$pop2010)) / sum(county$pop2010)
+```
+
+
+## 1.6.3 Histograms and Shape
+
+A __histogram__ is similar to a dotplot, however is displays the frequency as 
+the height of the bar on the y axis (instead of the number of dots) and groups
+observations into __bins__.
+
+```{r}
+email50 <- read.table("data/email50.txt", sep = "\t", header = TRUE)
+g <- ggplot(email50)
+g <- g + geom_histogram(aes(x = num_char), binwidth = 5, color = "black",
+                        fill = "steelblue")
+g <- g + xlab("Number of characters (in thousands)") + ylab("Frequency")
+g
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
