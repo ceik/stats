@@ -1,0 +1,34 @@
+---
+title: "Calculus"
+author: "Christian Eik"
+date: "Tuesday, June 30, 2015"
+output: pdf_document
+---
+
+```{r, echo=FALSE}
+setwd("C:/Chris/stats")
+```
+
+# Introduction
+
+Calculus is the mathematical study of change. Traditionally it has two major 
+branches, __differential calculus__ and __integral calculus__. These two 
+branches are related to each other by the __fundamental theorem of calculus__. 
+
+
+# Differential Calculus
+
+## Overview
+
+Differential calculus is the study of the definition, properties, and 
+applications of the derivative of a function. It is concerned with the study of 
+the rates at which quantities change. Primary study objects are a functions 
+__derivates__, which describe the rate of change of a function near an input 
+value. The process of finding a derivative is called differentiation.
+
+The derivative is a __linear operator__ __(research this term)__, which inputs a 
+function and outputs another function. It is often denoted with a prime: The 
+derivative of f is f' __(turn this into LaTeX)__. The derivate (f') represents 
+the change with respect to the input of the original function (f). E.g. if f
+takes time as an input and returns the position of an object at that time, f'
+represents the change in position of the object with respect to time (velocity).
