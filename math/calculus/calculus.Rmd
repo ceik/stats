@@ -15,6 +15,112 @@ Calculus is the mathematical study of change. Traditionally it has two major
 branches, __differential calculus__ and __integral calculus__. These two 
 branches are related to each other by the __fundamental theorem of calculus__. 
 
+# Functions
+
+## What is a Function?
+
+A __function__ is a relation between a set of __inputs__, called __variables__ 
+or __arguments__, and a set of permissible __outputs__. Each set of inputs 
+must map to exactly one output. 
+__(research: what about functions? containing a random part?)__
+
+Functions can be defined by a mathematical formula or an algorithm. However that 
+doesn't need to be the case. A fuction can also be defined by plain text or 
+some mix these two. E.g. this __piecewise__-defined function: 
+
+$$
+f(x) = \left\{
+        \begin{array}{ll}
+            the\:number\:of\:even\:digits\:in\:x & \quad if\:x\:is\:a\:whole
+            \:number \\
+            0 & \quad otherwise
+        \end{array}
+    \right.
+$$
+
+Two functions are the same if they yield the same output for the same input. 
+E.g. $f(x) = (1+x)^{2}$ and $g(x) = x^{2} + 2x + 1$ are the same. However 
+$f(x) = \frac{x^{2}}{x}$ and $g(x) = x$ are not the same, because 0 is in the 
+domain of $f(x)$, but not in the domain of $g(x)$.
+
+## Domain & Codomain
+
+A function has a __domain__, the set of input values for which the function is 
+defined, and a __codomain__, a set of values into which all the outputs of the 
+function fall. The set of input-output pairs is called the __graph__. E.g. 
+$f(x) = \frac{1}{x}$ is a function with the domain of all real numbers excluding 
+0.
+
+The domain of a complex, multi-part function is simply the domain of all its 
+parts. E.g. for $f(x) = \sqrt(1-x) + \sqrt(1+x)$, the domain for the first part 
+is $({-\infty}, 1]$ and the domain for the second part is $[-1, \infty)$. 
+Therefore the domain for the entire function is $[-1, 1]$. In this notation the 
+round bracket means the value is excluded, while the squared bracket indicates 
+that it is included.
+
+
+## Different Functions:
+
+### Square Root Function
+
+The domain of the square root function, $f(x) = \sqrt(x)$, are all non-negative 
+numbers, or $[0, \infty)$.  
+
+From this it follows that $\sqrt(x^{2}) = |x|$ and __NOT__ $\sqrt(x^{2}) = x$. 
+The square root of 0 is 0.
+
+
+## Limits
+
+### Definition
+
+The __limit__ is the output value that a function "approaches" as the input 
+value gets closer to a certain value. E.g. the following means that the 
+function $f(x)$ gets very close to 9 when it's input value x gets very close 
+to 3. 
+
+$$\lim_{x \to 3} f(x) = 9$$
+
+### Rules
+
+The __algebraic limit theorem__ states that the following rules hold true, 
+provided the limits on the right sides of the equations exist and the 
+denominator in the last equation is not zero.
+
+$$\lim_{x \to p} (f(x)+g(x)) = \lim_{x \to p} f(x) + \lim_{x \to p} g(x)$$
+$$\lim_{x \to p} (f(x)-g(x)) = \lim_{x \to p} f(x) - \lim_{x \to p} g(x)$$
+$$\lim_{x \to p} (f(x)*g(x)) = \lim_{x \to p} f(x) * \lim_{x \to p} g(x)$$
+$$\lim_{x \to p} \left(\frac{f(x)}{g(x)}\right) = 
+    \frac{\lim_{x \to p} f(x)}{\lim_{x \to p} g(x)}$$
+
+### Not Existing Limits
+
+Some limits simply do not exist. E.g. the following function oscilliates so 
+much that it doesn't really approach any particular value.
+
+$$\lim_{x \to 0} sin\left(\frac{1}{x}\right)$$
+
+### Squeeze Theorem
+
+For some functions that are not defined at a certain point a limit exists 
+nevertheless. 
+
+The __squeeze theorem__ states that for every input value $x$ not equal to $a$ 
+we have:
+$$g(x) \leq f(x) \leq h(x)$$
+and:
+$$\lim_{x \to a} g(x) = \lim_{x \to a} h(x) = L$$
+Then it follows that 
+$$\lim_{x \to a} f(x) = L$$
+
+An example of this is $f(x) = \left(\frac{sin(x)}{x}\right)$ at 
+the point 0. Because $\lim_{x \to 0} cos(x) = 1$, the application of the 
+squeeze theorem prooves that $\lim_{x \to 0} \left(\frac{sin(x)}{x}\right) = 1$: 
+
+$$cos(x) < \left(\frac{sin(x)}{x}\right) < 1$$
+
+
+
 
 # Differential Calculus
 

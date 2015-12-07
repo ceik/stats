@@ -21,6 +21,7 @@ subtopics are not ordered.
 ### 1. Mathematical Foundations
 
 ##### Calculus
+- Basics
 - Integration
 - Differentiation
 - Multivariate Calculus
